@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 
 public class ServerSocketGenerator extends MyServerSocket {
-    ServerSocket serverSocket;
+    public ServerSocket serverSocket;
 
     public void listen() {
         serverSocket = openServerSocket();
@@ -24,4 +24,11 @@ public class ServerSocketGenerator extends MyServerSocket {
         return serverSocket;
     }
 
+    public void closeSocket() {
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

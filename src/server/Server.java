@@ -10,4 +10,5 @@ public class Server {
     public void setServerSocketGenerator(MyServerSocket anyServerSocketGenerator) {
         this.serverSocketGenerator = anyServerSocketGenerator;
     }
+
 }
