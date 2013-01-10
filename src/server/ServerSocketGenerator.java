@@ -7,24 +7,22 @@ public class ServerSocketGenerator extends MyServerSocket {
     public ServerSocket serverSocket;
 
     public void listen() {
-        serverSocket = openServerSocket();
-        try {
-            serverSocket.accept();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        serverSocket = openServerSocket(4444);
+        ThreadGenerator threadGenerator = new ThreadGenerator();
+        threadGenerator.setServerSocket(this.serverSocket);
+        threadGenerator.beginProcess();
     }
 
-    public ServerSocket openServerSocket() {
+    public ServerSocket openServerSocket(int port) {
         try {
-            serverSocket = new ServerSocket(4444);
+            serverSocket = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return serverSocket;
     }
 
-    public void closeSocket() {
+    public void closeServerSocket() {
         try {
             serverSocket.close();
         } catch (IOException e) {

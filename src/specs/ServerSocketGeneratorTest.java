@@ -22,16 +22,16 @@ public class ServerSocketGeneratorTest {
 
     @Test
     public void serverSocketPortSet() throws IOException {
-        ServerSocket serverSocket = serverSocketGenerator.openServerSocket();
-        assertEquals(serverSocket.getLocalPort(), 4444);
-        serverSocketGenerator.closeSocket();
+        ServerSocket serverSocket = serverSocketGenerator.openServerSocket(5555);
+        assertEquals(serverSocket.getLocalPort(), 5555);
+        serverSocketGenerator.closeServerSocket();
     }
 
     @Test
-    public void serverSocketCanBeClosed() throws IOException {
-        ServerSocket serverSocket = serverSocketGenerator.openServerSocket();
+    public void serverSocketCloses() throws IOException {
+        ServerSocket serverSocket = serverSocketGenerator.openServerSocket(6644);
         assertFalse(serverSocket.isClosed());
-        serverSocketGenerator.closeSocket();
+        serverSocketGenerator.closeServerSocket();
         assertTrue(serverSocket.isClosed());
     }
 
