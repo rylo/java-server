@@ -1,6 +1,6 @@
 package server;
 
-public class MockServerSocketGenerator extends MyServerSocket {
+public class MockServerSocketGenerator extends MyServerSocketGenerator {
 
     public void listen() {
         listening = true;

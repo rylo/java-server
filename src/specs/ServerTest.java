@@ -3,14 +3,14 @@ package specs;
 import org.junit.Before;
 import org.junit.Test;
 import server.MockServerSocketGenerator;
-import server.MyServerSocket;
+import server.MyServerSocketGenerator;
 import server.Server;
 
 import static junit.framework.Assert.assertTrue;
 
 public class ServerTest {
     private Server server;
-    private MyServerSocket mockServerSocketGenerator;
+    private MyServerSocketGenerator mockServerSocketGenerator;
 
     @Before
     public void beforeEach() {

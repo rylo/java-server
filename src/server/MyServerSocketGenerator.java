@@ -1,6 +1,8 @@
 package server;
 
-public abstract class MyServerSocket {
+import java.net.ServerSocket;
+
+public abstract class MyServerSocketGenerator {
     public boolean listening = false;
 
     public abstract void listen();
