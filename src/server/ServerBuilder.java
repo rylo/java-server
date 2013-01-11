@@ -7,7 +7,7 @@ import java.net.Socket;
 public class ServerBuilder {
     public ServerSocket serverSocket;
     public volatile int requests = 0;
-    public int limit = 5;
+    public int limit = 50;
 
     public ServerBuilder(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;

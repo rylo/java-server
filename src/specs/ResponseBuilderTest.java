@@ -7,6 +7,7 @@ import server.requests.RequestParser;
 import server.requests.RequestReader;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -57,7 +58,7 @@ public class ResponseBuilderTest {
 
     @Test
     public void canTellThatRouteIsDirectory() throws IOException {
-        String headers = "GET /blah HTTP/1.1\nHost: localhost:4444";
+        String headers = "GET /src HTTP/1.1\nHost: localhost:4444";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
         RequestReader requestReader = new RequestReader(testInputStream);
         String headersRead = requestReader.getHeaders();
@@ -71,19 +72,11 @@ public class ResponseBuilderTest {
     }
 
     @Test
-    public void canGetResponseParameters() throws IOException {
-        String headers = "GET /echo?abc=123 HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
-        RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
-        testHttpRequestParameters.put("protocol", "HTTP/1.1");
-        testHttpRequestParameters.put("route", "/echo");
-        testHttpRequestParameters.put("method", "GET");
-        assertEquals(responseBuilder.getResponseParameters("text/html"),
-                    "HTTP/1.1 200 OK\n\r\r" +
-                    "Content-Type: text/html; charset=UTF-8\n\n");
+    public void canGetTheRequestedDirectory() {
+        String route = "/src";
+        File requestedDirectory = responseBuilder.getRequestedDirectory(route);
+        File testDirectory = new File(System.getProperty("user.dir") + route);
+        assertEquals(requestedDirectory, testDirectory);
     }
 
 }

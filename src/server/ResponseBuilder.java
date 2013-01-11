@@ -1,8 +1,10 @@
 package server;
 
+import server.responses.Directory;
 import server.responses.Echo;
 import server.responses.Time;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -20,22 +22,27 @@ public class ResponseBuilder {
 
     public void generateResponse() {
         String route = httpRequestParameters.get("route").substring(1);
+        String params;
         if(routeIsTime(route)) {
-            String time = new Time().get();
-            String responseParameters = getResponseParameters("text/html");
-            String response = responseParameters + time;
-            sendResponse(response);
+            params = new Time().get();
         } else if(routeIsEcho(route)) {
-            String params = new Echo().get(route);
-            String responseParameters = getResponseParameters("text/html");
-            String response = responseParameters + params;
-            sendResponse(response);
+            params = new Echo().get(route);
+        } else if(route.trim().contains("favicon.ico")) {
+            params = "";
         } else if (routeIsDirectory(route)) {
-            // display directory contents
+            File requestedDirectory = getRequestedDirectory(route);
+            params = new Directory().getResponse(requestedDirectory);
         } else {
-            String response = "Not /time or /echo";
-            sendResponse(response);
+            params = "Not /time or /echo or a directory";
         }
+        String responseParameters = getResponseParameters("text/html");
+        String response = responseParameters + params;
+        sendResponse(response);
+    }
+
+    public File getRequestedDirectory(String route) {
+        String requestedPath = System.getProperty("user.dir") + route;
+        return new File(requestedPath);
     }
 
     public void sendResponse(String response) {
@@ -58,10 +65,8 @@ public class ResponseBuilder {
     }
 
     public boolean routeIsDirectory(String route) {
-        // it knows current path
-        // check if adding route to the current path is a directory
-        // return true/false
-        return false;
+        File requestedDirectory = getRequestedDirectory(route);
+        return requestedDirectory.isDirectory();
     }
 
     public String getResponseParameters(String contentType) {
