@@ -1,4 +1,6 @@
-package server;
+package specs;
+
+import server.MockSocket;
 
 import java.io.IOException;
 import java.net.ServerSocket;
