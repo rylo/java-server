@@ -56,27 +56,4 @@ public class ResponseBuilderTest {
         assertTrue(responseBuilder.routeIsEcho(route));
     }
 
-    @Test
-    public void canTellThatRouteIsDirectory() throws IOException {
-        String headers = "GET /src HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
-        RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
-        String route = requestParser.getRoute();
-        testHttpRequestParameters.put("protocol", "HTTP/1.1");
-        testHttpRequestParameters.put("route", "/blah");
-        testHttpRequestParameters.put("method", "GET");
-        assertTrue(responseBuilder.routeIsDirectory(route));
-    }
-
-    @Test
-    public void canGetTheRequestedDirectory() {
-        String route = "/src";
-        File requestedDirectory = responseBuilder.getRequestedDirectory(route);
-        File testDirectory = new File(System.getProperty("user.dir") + route);
-        assertEquals(requestedDirectory, testDirectory);
-    }
-
 }
