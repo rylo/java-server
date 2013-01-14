@@ -21,6 +21,10 @@ public class RequestReader {
             headers += line + "\n";
             line = bufferedReader.readLine();
         }
+        return removeWhiteSpace(headers);
+    }
+
+    public String removeWhiteSpace(String headers) {
         return headers.trim();
     }
 

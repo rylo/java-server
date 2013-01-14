@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 public class ThreadBuilder implements Runnable {
     private final Socket clientSocket;
-    private InputStream inputStream;
 
     public ThreadBuilder(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
@@ -18,7 +17,7 @@ public class ThreadBuilder implements Runnable {
     @Override
     public void run() {
         try {
-            inputStream = clientSocket.getInputStream();
+            InputStream inputStream = clientSocket.getInputStream();
             String headers = new RequestReader(inputStream).getHeaders();
             HashMap<String,String> httpRequestParameters = new RequestParser(headers).parseHeaders();
             ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestParameters);
