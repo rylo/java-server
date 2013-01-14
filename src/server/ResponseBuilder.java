@@ -1,9 +1,8 @@
 package server;
 
-import server.responses.Directory;
-import server.responses.Echo;
-import server.responses.Time;
+import server.responses.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -20,21 +19,30 @@ public class ResponseBuilder {
     }
 
     public void generateResponse() {
-        String route = httpRequestParameters.get("route").substring(1);
-        String params = "";
-        String response;
+        String route = httpRequestParameters.get("route");
+        ResponseObject responseObject;
         if(routeIsTime(route)) {
-            params = new Time().get();
-            String responseParameters = getResponseParameters(" 200 OK", "text/html");
-            response = responseParameters + params;
+            responseObject = new TimeResponse();
         } else if(routeIsEcho(route)) {
-            params = new Echo().get(route);
-            String responseParameters = getResponseParameters(" 200 OK", "text/plain");
-            response = responseParameters + params;
+            responseObject = new EchoResponse();
         } else {
-            response = new Directory(httpRequestParameters).getDirectoryResponse(route);
+            File path = getRequestedPath(route);
+            if(path.isDirectory()) {
+                responseObject = new DirectoryResponse(path);
+            } else if(path.isFile()) {
+                responseObject = new FileResponse(path);
+            } else {
+                responseObject = new FailureResponse();
+            }
         }
-        sendResponse(response);
+        String headers = responseObject.getHeaders();
+        String body = responseObject.getBody(route);
+        sendResponse(headers + body);
+    }
+
+    public File getRequestedPath(String route) {
+        String requestedPath = System.getProperty("user.dir") + "/" + route;
+        return new File(requestedPath);
     }
 
     public void sendResponse(String response) {
@@ -54,10 +62,6 @@ public class ResponseBuilder {
 
     public boolean routeIsEcho(String route) {
         return route.contains("echo");
-    }
-
-    public String getResponseParameters(String statusCode, String contentType) {
-        return httpRequestParameters.get("protocol") + statusCode + "\r\n" + "Content-Type: " + contentType + "; charset=UTF-8\r\n\r\n";
     }
 
 }

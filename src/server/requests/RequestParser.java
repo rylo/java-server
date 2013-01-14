@@ -13,25 +13,19 @@ public class RequestParser {
     }
 
     public HashMap<String, String> parseHeaders() {
-        String lines[] = new String[0];
+        String lines[];
         try {
             lines = headers.split("\\r?\\n");
             setMethod(lines[0].split(" ")[0]);
-            setRoute(lines[0].split(" ")[1]);
+            setRoute(lines[0].split(" ")[1].substring(1));
             setProtocol(lines[0].split(" ")[2]);
         } catch(ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
         HashMap<String, String> httpRequestParameters = new HashMap<String, String>();
-        String[] keys = new String[]{"method", "route", "protocol"};
-
-        int num = 0;
-        for(String key : keys) {
-            while(!httpRequestParameters.containsKey(key) && num < 3) {
-                httpRequestParameters.put(key, lines[0].split(" ")[num]);
-                num++;
-            }
-        }
+        httpRequestParameters.put("method", getMethod());
+        httpRequestParameters.put("route", getRoute());
+        httpRequestParameters.put("protocol", getProtocol());
         return httpRequestParameters;
     }
 
