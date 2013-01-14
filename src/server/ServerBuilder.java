@@ -6,21 +6,17 @@ import java.net.Socket;
 
 public class ServerBuilder {
     public ServerSocket serverSocket;
-    public volatile int requests = 0;
-    public int limit = 50;
 
     public ServerBuilder(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
     public void begin() {
-        while(requests < limit) {
+        while(true) {
             try {
                 Socket clientSocket = serverSocket.accept();
                 ThreadBuilder threadBuilder = new ThreadBuilder(clientSocket);
-                threadBuilder.run();
-                requests++;
-                clientSocket.close();
+                new Thread(threadBuilder).start();
             } catch (IOException e) {
                 e.printStackTrace();
             }

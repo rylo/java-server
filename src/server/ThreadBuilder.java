@@ -22,6 +22,7 @@ public class ThreadBuilder implements Runnable {
             HashMap<String,String> httpRequestParameters = new RequestParser(headers).parseHeaders();
             ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestParameters);
             responseBuilder.generateResponse();
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

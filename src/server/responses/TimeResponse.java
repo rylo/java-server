@@ -1,12 +1,12 @@
 package server.responses;
 
-import server.RouteResponse;
+import server.ResponseObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class Time extends RouteResponse {
+public class TimeResponse extends ResponseObject {
 
     @Override
     public String getHeaders() {
@@ -16,7 +16,7 @@ public class Time extends RouteResponse {
     @Override
     public String getBody(String route) {
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -1,10 +1,10 @@
 package server.responses;
 
-import server.RouteResponse;
+import server.ResponseObject;
 
 import java.io.*;
 
-public class FileResponse extends RouteResponse {
+public class FileResponse extends ResponseObject {
     private final File requestedFile;
 
     public FileResponse(File requestedFile) {

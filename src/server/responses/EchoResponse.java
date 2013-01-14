@@ -1,9 +1,19 @@
 package server.responses;
 
-public class Echo {
+import server.ResponseObject;
 
-    public String get(String route) {
-        String params[] = route.split("\\?");
+public class EchoResponse extends ResponseObject {
+
+    @Override
+    public String getHeaders() {
+        return "HTTP/1.1" + " 200 OK" + "\r\n" + "Content-Type: " + "text/plain" + "; charset=UTF-8\r\n\r\n";
+    }
+
+    // shouldn't be any parsing here
+
+    @Override
+    public String getBody(String route) {
+        String params[] =  route.split("\\?");
         int length = params.length;
         if(length == 1) {
             return routeSplitAtAnd(params[0], length);
