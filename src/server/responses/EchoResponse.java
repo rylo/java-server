@@ -6,7 +6,6 @@ public class EchoResponse extends ResponseObject {
     private final String parsedRoute;
 
     public EchoResponse(String parsedRoute) {
-        super();
         this.parsedRoute = parsedRoute;
     }
 

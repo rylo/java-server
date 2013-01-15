@@ -1,34 +1,32 @@
 package specs;
 
 import org.junit.Test;
-import server.responses.Echo;
+import server.requests.RequestParser;
+import server.requests.RequestReader;
+import server.responses.EchoResponse;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 
 public class EchoTest {
 
     @Test
-    public void canParseOneKeyValuePairInQueryParams() {
-        String parsedString = new Echo().get("echo?abc=123");
-        assertEquals(parsedString, "Query string parameters are: \nabc=123\n");
-    }
+    public void correctlyDisplaysTheQueryParams() throws IOException {
+        String testHeaders = "GET /echo?key=value&name=Tom&sport=basketball HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
-    @Test
-    public void canParseTwoKeyValuePairsInQueryParams() {
-        String parsedString = new Echo().get("echo?abc=123&def=456");
-        assertEquals(parsedString, "Query string parameters are: \nabc=123\ndef=456\n");
-    }
+        RequestReader requestReader = new RequestReader(testInputStream);
+        String headers = requestReader.getHeaders();
 
-    @Test
-    public void canParseFiveKeyValuePairsInQueryParams() {
-        String parsedString = new Echo().get("echo?abc=123&def=456&ghi=789&jkl=101&mno=999");
-        assertEquals(parsedString, "Query string parameters are: \nabc=123\ndef=456\nghi=789\njkl=101\nmno=999\n");
-    }
+        RequestParser requestParser = new RequestParser(headers);
+        requestParser.parseHeaders();
+        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedHeaders();
 
-    @Test
-    public void canHandleNoQueryString() {
-        String parsedString = new Echo().get("echo");
-        assertEquals(parsedString, "Query string parameters are: \n");
+        EchoResponse echoResponse = new EchoResponse(httpRequestHeaders.get("parsedRoute"));
+        assertEquals(echoResponse.getBody(requestParser.getRoute()), "Query string parameters are: \nkey=value\nname=Tom\nsport=basketball\n");
     }
 
 }

@@ -7,6 +7,7 @@ public class RequestParser {
     private String method;
     private String route;
     private String protocol;
+    private String parsedRoute;
 
     public RequestParser(String headers) {
         this.headers = headers;
@@ -19,6 +20,7 @@ public class RequestParser {
             setMethod(lines[0].split(" ")[0]);
             setRoute(lines[0].split(" ")[1].substring(1));
             setProtocol(lines[0].split(" ")[2]);
+            setParsedRoute(getRoute());
         } catch(ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
@@ -29,7 +31,7 @@ public class RequestParser {
         httpRequestHeaders.put("method", getMethod());
         httpRequestHeaders.put("route", getRoute());
         httpRequestHeaders.put("protocol", getProtocol());
-        httpRequestHeaders.put("parsedRoute", splitRouteAtQuestionMark(getRoute()));
+        httpRequestHeaders.put("parsedRoute", getParsedRoute());
         return httpRequestHeaders;
     }
 
@@ -68,6 +70,10 @@ public class RequestParser {
         this.protocol = protocol;
     }
 
+    private void setParsedRoute(String route) {
+        this.parsedRoute = splitRouteAtQuestionMark(route);
+    }
+
     public String getMethod() {
         return method;
     }
@@ -78,6 +84,10 @@ public class RequestParser {
 
     public String getProtocol() {
         return protocol;
+    }
+
+    public String getParsedRoute() {
+        return parsedRoute;
     }
 
 }
