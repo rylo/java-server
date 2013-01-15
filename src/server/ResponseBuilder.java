@@ -20,11 +20,12 @@ public class ResponseBuilder {
 
     public void generateResponse() {
         String route = httpRequestParameters.get("route");
+        String parsedRoute = httpRequestParameters.get("parsedRoute");
         ResponseObject responseObject;
         if(routeIsTime(route)) {
             responseObject = new TimeResponse();
         } else if(routeIsEcho(route)) {
-            responseObject = new EchoResponse();
+            responseObject = new EchoResponse(parsedRoute);
         } else {
             File path = getRequestedPath(route);
             if(path.isDirectory()) {

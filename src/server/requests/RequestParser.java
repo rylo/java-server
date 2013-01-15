@@ -26,7 +26,31 @@ public class RequestParser {
         httpRequestParameters.put("method", getMethod());
         httpRequestParameters.put("route", getRoute());
         httpRequestParameters.put("protocol", getProtocol());
+        httpRequestParameters.put("parsedRoute", splitRouteAtQuestionMark(getRoute()));
         return httpRequestParameters;
+    }
+
+    public String splitRouteAtQuestionMark(String route) {
+        String splitRoute[] =  route.split("\\?"); // String.split("[\r\n]+")
+        int length = splitRoute.length;
+        if(length == 1) {
+            return splitRouteAtAmpersand(splitRoute[0], length);
+        } else {
+            return splitRouteAtAmpersand(splitRoute[1], length);
+        }
+    }
+
+    public String splitRouteAtAmpersand(String route, int length) {
+        String params[] = route.split("\\&");
+        int n;
+        String splitRoutes = "";
+        for(n=0; n < params.length; n++) {
+            if(length > 1) {
+                splitRoutes += params[n];
+                splitRoutes += "\n";
+            }
+        }
+        return splitRoutes;
     }
 
     private void setMethod(String method) {
