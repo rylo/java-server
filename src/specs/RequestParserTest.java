@@ -14,26 +14,37 @@ public class RequestParserTest {
 
     @Test
     public void canParseHeadersThatHaveBeenRead() throws IOException {
-        String headers = "GET /hellomate HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+        String testHeaders = "GET /hellomate HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
-        RequestParser requestParser = new RequestParser(headersRead);
-        HashMap<String, String> testHttpRequestParameters = new HashMap<String, String>();
-        testHttpRequestParameters.put("protocol", "HTTP/1.1");
-        testHttpRequestParameters.put("route", "/hellomate");
-        testHttpRequestParameters.put("method", "GET");
-        assertEquals(requestParser.parseHeaders(), testHttpRequestParameters);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
+        requestParser.parseHeaders();
+        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedHeaders();
+
+        HashMap<String, String> testHttpRequestHeaders = new HashMap<String, String>();
+        testHttpRequestHeaders.put("parsedRoute", "");
+        testHttpRequestHeaders.put("protocol", "HTTP/1.1");
+        testHttpRequestHeaders.put("route", "hellomate");
+        testHttpRequestHeaders.put("method", "GET");
+
+        assertEquals(httpRequestHeaders, testHttpRequestHeaders);
+
     }
 
     @Test
     public void canRetrieveTheMethod() throws IOException {
         String headers = "GET /hellomate HTTP/1.1\nHost: localhost:4444";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
         String headersRead = requestReader.getHeaders();
+
         RequestParser requestParser = new RequestParser(headersRead);
         requestParser.parseHeaders();
+
         assertEquals("GET", requestParser.getMethod());
     }
 
@@ -41,21 +52,27 @@ public class RequestParserTest {
     public void canRetrieveTheRoute() throws IOException {
         String headers = "GET /aswellroute HTTP/1.1\nHost: localhost:4444";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
         String headersRead = requestReader.getHeaders();
+
         RequestParser requestParser = new RequestParser(headersRead);
         requestParser.parseHeaders();
-        assertEquals("/aswellroute", requestParser.getRoute());
+
+        assertEquals("aswellroute", requestParser.getRoute());
     }
 
     @Test
     public void canRetrieveTheProtocol() throws IOException {
         String headers = "GET /hellomate HTTP/1.1\nHost: localhost:4444";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
         String headersRead = requestReader.getHeaders();
+
         RequestParser requestParser = new RequestParser(headersRead);
         requestParser.parseHeaders();
+
         assertEquals("HTTP/1.1", requestParser.getProtocol());
     }
 

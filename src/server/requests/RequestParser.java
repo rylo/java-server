@@ -12,7 +12,7 @@ public class RequestParser {
         this.headers = headers;
     }
 
-    public HashMap<String, String> parseHeaders() {
+    public void parseHeaders() {
         String lines[];
         try {
             lines = headers.split("\\r?\\n");
@@ -22,16 +22,19 @@ public class RequestParser {
         } catch(ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
-        HashMap<String, String> httpRequestParameters = new HashMap<String, String>();
-        httpRequestParameters.put("method", getMethod());
-        httpRequestParameters.put("route", getRoute());
-        httpRequestParameters.put("protocol", getProtocol());
-        httpRequestParameters.put("parsedRoute", splitRouteAtQuestionMark(getRoute()));
-        return httpRequestParameters;
+    }
+
+    public HashMap<String, String> storeParsedHeaders() {
+        HashMap<String, String> httpRequestHeaders = new HashMap<String, String>();
+        httpRequestHeaders.put("method", getMethod());
+        httpRequestHeaders.put("route", getRoute());
+        httpRequestHeaders.put("protocol", getProtocol());
+        httpRequestHeaders.put("parsedRoute", splitRouteAtQuestionMark(getRoute()));
+        return httpRequestHeaders;
     }
 
     public String splitRouteAtQuestionMark(String route) {
-        String splitRoute[] =  route.split("\\?"); // String.split("[\r\n]+")
+        String splitRoute[] =  route.split("\\?");
         int length = splitRoute.length;
         if(length == 1) {
             return splitRouteAtAmpersand(splitRoute[0], length);
