@@ -5,6 +5,9 @@ import org.junit.Test;
 import server.ResponseBuilder;
 import server.requests.RequestParser;
 import server.requests.RequestReader;
+import server.responses.DirectoryResponse;
+import server.responses.EchoResponse;
+import server.responses.TimeResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -28,32 +31,83 @@ public class ResponseBuilderTest {
 
     @Test
     public void canTellThatRouteIsTime() throws IOException {
-        String headers = "GET /time HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+        String testHeaders = "GET /time HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
-        RequestParser requestParser = new RequestParser(headersRead);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
         requestParser.parseHeaders();
         String route = requestParser.getRoute();
-        testHttpRequestParameters.put("protocol", "HTTP/1.1");
-        testHttpRequestParameters.put("route", "/time");
-        testHttpRequestParameters.put("method", "GET");
+
         assertTrue(responseBuilder.routeIsTime(route));
     }
 
     @Test
     public void canTellThatRouteIsEcho() throws IOException {
-        String headers = "GET /echo?abc=123 HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
+        String testHeaders = "GET /echo?abc=123 HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
-        RequestParser requestParser = new RequestParser(headersRead);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
         requestParser.parseHeaders();
         String route = requestParser.getRoute();
-        testHttpRequestParameters.put("protocol", "HTTP/1.1");
-        testHttpRequestParameters.put("route", "/echo");
-        testHttpRequestParameters.put("method", "GET");
+
         assertTrue(responseBuilder.routeIsEcho(route));
+    }
+
+    @Test
+    public void canGetTheRequestedPath() {
+        String route = "src";
+        assertEquals(responseBuilder.getRequestedPath(route), new File("/Users/ryanzverner/Documents/Coding/8thLight/java-server-two/src"));
+    }
+
+    @Test
+    public void generatesEchoResponseObject() throws IOException {
+        String testHeaders = "GET /echo?abc=123&size=big HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
+        RequestReader requestReader = new RequestReader(testInputStream);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
+        requestParser.parseHeaders();
+        testHttpRequestParameters.put("route", requestParser.getRoute());
+
+        assertTrue(responseBuilder.generateResponseObject() instanceof EchoResponse);
+    }
+
+    @Test
+    public void generatesTimeResponseObject() throws IOException {
+        String testHeaders = "GET /time HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
+        RequestReader requestReader = new RequestReader(testInputStream);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
+        requestParser.parseHeaders();
+        testHttpRequestParameters.put("route", requestParser.getRoute());
+
+        assertTrue(responseBuilder.generateResponseObject() instanceof TimeResponse);
+    }
+
+    @Test
+    public void generatesDirectoryResponseObject() throws IOException {
+        String testHeaders = "GET /src HTTP/1.1\nHost: localhost:4444";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
+
+        RequestReader requestReader = new RequestReader(testInputStream);
+        String headers = requestReader.getHeaders();
+
+        RequestParser requestParser = new RequestParser(headers);
+        requestParser.parseHeaders();
+        testHttpRequestParameters.put("route", requestParser.getRoute());
+
+        assertTrue(responseBuilder.generateResponseObject() instanceof DirectoryResponse);
     }
 
 }

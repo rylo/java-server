@@ -10,17 +10,17 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class ResponseBuilder {
-    private final HashMap<String, String> httpRequestParameters;
+    public final HashMap<String, String> httpRequestHeaders;
     private final Socket clientSocket;
 
-    public ResponseBuilder(Socket clientSocket, HashMap<String, String> httpRequestParameters) {
+    public ResponseBuilder(Socket clientSocket, HashMap<String, String> httpRequestHeaders) {
         this.clientSocket = clientSocket;
-        this.httpRequestParameters = httpRequestParameters;
+        this.httpRequestHeaders = httpRequestHeaders;
     }
 
-    public void generateResponse() {
-        String route = httpRequestParameters.get("route");
-        String parsedRoute = httpRequestParameters.get("parsedRoute");
+    public ResponseObject generateResponseObject() {
+        String route = httpRequestHeaders.get("route");
+        String parsedRoute = httpRequestHeaders.get("parsedRoute");
         ResponseObject responseObject;
         if(routeIsTime(route)) {
             responseObject = new TimeResponse();
@@ -36,14 +36,18 @@ public class ResponseBuilder {
                 responseObject = new FailureResponse();
             }
         }
-        String headers = responseObject.getHeaders();
-        String body = responseObject.getBody(route);
-        sendResponse(headers + body);
+        return responseObject;
     }
 
     public File getRequestedPath(String route) {
         String requestedPath = System.getProperty("user.dir") + "/" + route;
         return new File(requestedPath);
+    }
+
+    public void formResponse(ResponseObject responseObject) {
+        String headers = responseObject.getHeaders();
+        String body = responseObject.getBody(httpRequestHeaders.get("route"));
+        sendResponse(headers + body);
     }
 
     public void sendResponse(String response) {
