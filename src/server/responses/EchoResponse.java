@@ -1,7 +1,5 @@
 package server.responses;
 
-import server.ResponseObject;
-
 public class EchoResponse extends ResponseObject {
     private final String parsedRoute;
 

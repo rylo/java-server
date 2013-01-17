@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import static junit.framework.Assert.assertEquals;
 
-public class EchoTest {
+public class EchoResponseTest {
 
     @Test
     public void correctlyDisplaysTheQueryParams() throws IOException {

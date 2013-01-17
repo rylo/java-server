@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -35,10 +36,10 @@ public class ResponseBuilderTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         String route = requestParser.getRoute();
 
         assertTrue(responseBuilder.routeIsTime(route));
@@ -50,10 +51,10 @@ public class ResponseBuilderTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         String route = requestParser.getRoute();
 
         assertTrue(responseBuilder.routeIsEcho(route));
@@ -71,10 +72,11 @@ public class ResponseBuilderTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
+        String route = requestParser.getRoute();
         testHttpRequestParameters.put("route", requestParser.getRoute());
 
         assertTrue(responseBuilder.generateResponseObject() instanceof EchoResponse);
@@ -86,10 +88,10 @@ public class ResponseBuilderTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         testHttpRequestParameters.put("route", requestParser.getRoute());
 
         assertTrue(responseBuilder.generateResponseObject() instanceof TimeResponse);
@@ -101,10 +103,10 @@ public class ResponseBuilderTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         testHttpRequestParameters.put("route", requestParser.getRoute());
 
         assertTrue(responseBuilder.generateResponseObject() instanceof DirectoryResponse);

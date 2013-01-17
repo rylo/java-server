@@ -1,4 +1,4 @@
-package server;
+package server.responses;
 
 public abstract class ResponseObject {
 
