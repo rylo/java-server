@@ -2,10 +2,12 @@ package server;
 
 import server.requests.RequestParser;
 import server.requests.RequestReader;
+import server.responses.ResponseObject;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 
 public class ThreadBuilder implements Runnable {
     private final Socket clientSocket;
@@ -18,10 +20,16 @@ public class ThreadBuilder implements Runnable {
     public void run() {
         try {
             InputStream inputStream = clientSocket.getInputStream();
-            String headers = new RequestReader(inputStream).getHeaders();
-            HashMap<String,String> httpRequestParameters = new RequestParser(headers).parseHeaders();
-            ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestParameters);
-            responseBuilder.generateResponse();
+            List<String> requestContent = new RequestReader(inputStream).getRequestContent();
+            RequestParser requestParser = new RequestParser(requestContent);
+
+            requestParser.parseContent();
+            HashMap<String, String> httpRequestContent = requestParser.storeParsedContent();
+
+            ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestContent);
+            ResponseObject responseObject = responseBuilder.generateResponseObject();
+            responseBuilder.formResponse(responseObject);
+
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();

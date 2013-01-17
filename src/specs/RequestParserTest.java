@@ -7,6 +7,7 @@ import server.requests.RequestReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -18,13 +19,14 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
-        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
+        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedContent();
 
         HashMap<String, String> testHttpRequestHeaders = new HashMap<String, String>();
+        testHttpRequestHeaders.put("body", "");
         testHttpRequestHeaders.put("parsedRoute", "");
         testHttpRequestHeaders.put("protocol", "HTTP/1.1");
         testHttpRequestHeaders.put("route", "hellomate");
@@ -39,10 +41,10 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
 
         assertEquals("GET", requestParser.getMethod());
     }
@@ -53,10 +55,10 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
 
         assertEquals("aswellroute", requestParser.getRoute());
     }
@@ -67,10 +69,10 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
 
         assertEquals("HTTP/1.1", requestParser.getProtocol());
     }
@@ -81,13 +83,12 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
-        String parsedRoute = requestParser.splitRouteAtQuestionMark(requestParser.getRoute());
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
 
-        assertEquals(parsedRoute, "abc=123\n");
+        assertEquals(requestParser.getParsedRoute(), "abc=123\n");
     }
 
     @Test
@@ -96,13 +97,12 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
-        String parsedRoute = requestParser.splitRouteAtQuestionMark(requestParser.getRoute());
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
 
-        assertEquals(parsedRoute, "abc=123\nname=Ryan\nhair=red\n");
+        assertEquals(requestParser.getParsedRoute(), "abc=123\nname=Ryan\nhair=red\n");
     }
 
     @Test
@@ -111,10 +111,10 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         String parsedRoute = requestParser.splitRouteAtQuestionMark(requestParser.getRoute());
 
         assertEquals(parsedRoute, "");
@@ -126,10 +126,10 @@ public class RequestParserTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headersRead = requestReader.getHeaders();
+        List<String> requestContent = requestReader.getRequestContent();
 
-        RequestParser requestParser = new RequestParser(headersRead);
-        requestParser.parseHeaders();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
         String parsedRoute = requestParser.splitRouteAtQuestionMark(requestParser.getRoute());
 
         assertEquals(parsedRoute, "");

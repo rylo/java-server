@@ -1,27 +1,51 @@
 package server.requests;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RequestReader {
     private BufferedReader bufferedReader;
 
     public RequestReader(InputStream inputStream) {
-        InputStream inputStream1 = inputStream;
-        InputStreamReader inputStreamReader = new InputStreamReader(inputStream1);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
         this.bufferedReader = new BufferedReader(inputStreamReader);
     }
 
-    public String getHeaders() throws IOException {
+    public List<String> getRequestContent() throws IOException {
         String headers = "";
+        String body = "";
+        final String contentLengthString = "Content-Length: ";
+        int contentLength = 0;
+        boolean isPostRequest = false;
+
         String line = bufferedReader.readLine();
         while(lineReadable(line)) {
+            if(line.contains("POST")) {
+                isPostRequest = true;
+            }
+            if(line.startsWith(contentLengthString)) {
+                contentLength = Integer.parseInt(line.substring(contentLengthString.length()));
+            }
             headers += line + "\n";
             line = bufferedReader.readLine();
         }
-        return removeWhiteSpace(headers);
+        if(isPostRequest) {
+            body = getBody(bufferedReader, contentLength);
+        }
+
+        List<String> requestContent = new ArrayList<String>();
+        requestContent.add(removeWhiteSpace(headers));
+        requestContent.add(body);
+        return requestContent;
+    }
+
+    private String getBody(BufferedReader bufferedReader, int contentLength) throws IOException {
+        char[] characters = new char[contentLength];
+        StringBuilder postContent = new StringBuilder();
+        bufferedReader.read(characters, 0, contentLength);
+        postContent.append(new String(characters));
+        return postContent.toString();
     }
 
     public String removeWhiteSpace(String headers) {

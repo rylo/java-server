@@ -18,7 +18,7 @@ public class RequestReaderTest {
         String headers = "test";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
         RequestReader requestReader = new RequestReader(testInputStream);
-        assertEquals(requestReader.getHeaders(), headers);
+        assertEquals(requestReader.getRequestContent().get(0), headers);
     }
 
     @Test
@@ -26,7 +26,7 @@ public class RequestReaderTest {
         String headers = "GET /hellomate HTTP/1.1\nHost: localhost:4444";
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
         RequestReader requestReader = new RequestReader(testInputStream);
-        assertEquals(requestReader.getHeaders(), headers);
+        assertEquals(requestReader.getRequestContent().get(0), headers);
     }
 
     @Test
