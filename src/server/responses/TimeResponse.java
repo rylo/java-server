@@ -14,7 +14,7 @@ public class TimeResponse extends ResponseObject {
     @Override
     public String getBody(String route) {
         try {
-            Thread.sleep(3000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

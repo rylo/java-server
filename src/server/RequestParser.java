@@ -16,17 +16,21 @@ public class RequestParser {
     }
 
     public void parseContent() {
-        String headerLines[];
+        String requestContentLines[];
         try {
-            headerLines = requestContent.get(0).split("\\r?\\n");
-            setMethod(headerLines[0].split(" ")[0]);
-            setRoute(headerLines[0].split(" ")[1].substring(1));
-            setProtocol(headerLines[0].split(" ")[2]);
-            setParsedRoute(headerLines[0].split(" ")[1].substring(1));
+            requestContentLines = splitRequestContent();
+            setMethod(requestContentLines[0].split(" ")[0]);
+            setRoute(requestContentLines[0].split(" ")[1].substring(1));
+            setProtocol(requestContentLines[0].split(" ")[2]);
+            setParsedRoute(requestContentLines[0].split(" ")[1].substring(1));
             setBody(requestContent.get(1));
         } catch(ArrayIndexOutOfBoundsException e) {
             e.printStackTrace();
         }
+    }
+
+    private String[] splitRequestContent() {
+        return requestContent.get(0).split("\\r?\\n");
     }
 
     public HashMap<String, String> storeParsedContent() {

@@ -30,7 +30,7 @@ public class ThreadBuilder implements Runnable {
         }
     }
 
-    private HashMap<String, String> processInputStream(InputStream inputStream) throws IOException {
+    public HashMap<String, String> processInputStream(InputStream inputStream) throws IOException {
         List<String> requestContent = new RequestReader(inputStream).getRequestContent();
         RequestParser requestParser = new RequestParser(requestContent);
         requestParser.parseContent();

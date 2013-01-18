@@ -30,13 +30,3 @@ public class FileResponseTest {
     }
 
 }
-
-
-//FileReader reader = new FileReader();
-//File file = new File(DIR + "test.jpg");
-//byte[] imageContent = FileUtils.readFileToByteArray(file);
-//byte[] readData = reader.getBinaryData(DIR + "test.jpg");
-//
-//for (int i = 0; i < imageContent.length; i++) {
-//        assertEquals(imageContent[i], readData[i]);
-//}

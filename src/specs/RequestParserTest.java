@@ -3,6 +3,8 @@ package specs;
 import org.junit.Test;
 import server.RequestParser;
 import server.RequestReader;
+import server.ResponseBuilder;
+import server.responses.ResponseObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -121,18 +123,14 @@ public class RequestParserTest {
     }
 
     @Test
-    public void canSpli() throws IOException {
-        String headers = "GET /echo? HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
-
-        RequestReader requestReader = new RequestReader(testInputStream);
-        List<String> requestContent = requestReader.getRequestContent();
-
+    public void canCorrectlyRecognizeBodyContentAndRetrieveIt() throws IOException {
+        String content = "POST /echopost HTTP/1.1\nHost: localhost:4444\nContent-Length: 11\n\nA=1&B=2&C=3";
+        ByteArrayInputStream testInputStream = new ByteArrayInputStream(content.getBytes());
+        List<String> requestContent = new RequestReader(testInputStream).getRequestContent();
         RequestParser requestParser = new RequestParser(requestContent);
         requestParser.parseContent();
-        String parsedRoute = requestParser.splitRouteAtQuestionMark(requestParser.getRoute());
-
-        assertEquals(parsedRoute, "");
+        requestParser.storeParsedContent();
+        assertEquals(requestParser.getBody(), "A=1\nB=2\nC=3\n");
     }
 
 }

@@ -18,7 +18,6 @@ public class RequestReader {
         final String contentLengthString = "Content-Length: ";
         int contentLength = 0;
         boolean isPostRequest = false;
-
         String line = bufferedReader.readLine();
         while(lineReadable(line)) {
             if(line.contains("POST")) {
@@ -33,7 +32,6 @@ public class RequestReader {
         if(isPostRequest) {
             body = getBody(bufferedReader, contentLength);
         }
-
         List<String> requestContent = new ArrayList<String>();
         requestContent.add(removeWhiteSpace(headers));
         requestContent.add(body);
