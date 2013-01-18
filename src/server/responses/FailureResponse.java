@@ -1,7 +1,5 @@
 package server.responses;
 
-import server.ResponseObject;
-
 public class FailureResponse extends ResponseObject {
 
     @Override

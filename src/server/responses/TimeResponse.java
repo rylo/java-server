@@ -1,7 +1,5 @@
 package server.responses;
 
-import server.ResponseObject;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

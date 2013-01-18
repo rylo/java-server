@@ -1,6 +1,7 @@
 .idea/
 lib/
 images/
+out/
 *.iml
 *.class
 *.jar

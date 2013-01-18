@@ -1,13 +1,14 @@
 package specs;
 
 import org.junit.Test;
-import server.requests.RequestParser;
-import server.requests.RequestReader;
+import server.RequestParser;
+import server.RequestReader;
 import server.responses.EchoResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -19,11 +20,11 @@ public class EchoResponseTest {
         ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
 
         RequestReader requestReader = new RequestReader(testInputStream);
-        String headers = requestReader.getHeaders();
+        List<String> headers = requestReader.getRequestContent();
 
         RequestParser requestParser = new RequestParser(headers);
-        requestParser.parseHeaders();
-        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedHeaders();
+        requestParser.parseContent();
+        HashMap<String, String> httpRequestHeaders = requestParser.storeParsedContent();
 
         EchoResponse echoResponse = new EchoResponse(httpRequestHeaders.get("parsedRoute"));
         assertEquals(echoResponse.getBody(requestParser.getRoute()), "Query string parameters are: \nkey=value\nname=Tom\nsport=basketball\n");

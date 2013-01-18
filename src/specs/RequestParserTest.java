@@ -1,8 +1,8 @@
 package specs;
 
 import org.junit.Test;
-import server.requests.RequestParser;
-import server.requests.RequestReader;
+import server.RequestParser;
+import server.RequestReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

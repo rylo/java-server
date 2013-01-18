@@ -1,7 +1,7 @@
 package specs;
 
 import org.junit.Test;
-import server.requests.RequestReader;
+import server.RequestReader;
 
 import java.io.ByteArrayInputStream;
 
