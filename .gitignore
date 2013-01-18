@@ -1,6 +1,6 @@
 .idea/
 lib/
-images/
+test_files/
 out/
 *.iml
 *.class
