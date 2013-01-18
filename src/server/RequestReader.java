@@ -1,4 +1,4 @@
-package server.requests;
+package server;
 
 import java.io.*;
 import java.util.ArrayList;

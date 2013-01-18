@@ -1,4 +1,4 @@
-package server.requests;
+package server;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +80,8 @@ public class RequestParser {
     }
 
     private void setBody(String body) {
-        this.body = body;
+        String splitBody[] =  body.split("\\&");
+        this.body = splitRouteAtAmpersand(body, splitBody.length);
     }
 
     public String getMethod() {
