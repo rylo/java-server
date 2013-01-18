@@ -6,21 +6,36 @@ import java.net.Socket;
 
 public class ServerBuilder {
     public ServerSocket serverSocket;
+    public int limit;
+    private ThreadBuilder threadBuilder;
 
-    public ServerBuilder(ServerSocket serverSocket) {
+    public ServerBuilder(ServerSocket serverSocket, int limit) {
         this.serverSocket = serverSocket;
+        this.limit = limit;
     }
 
     public void begin() {
-        while(true) {
-            try {
-                Socket clientSocket = serverSocket.accept();
-                ThreadBuilder threadBuilder = new ThreadBuilder(clientSocket);
-                new Thread(threadBuilder).start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        int count = 0;
+        while(count < limit) {
+            createThreadBuilder();
+            new Thread(threadBuilder).start();
+            count++;
         }
+    }
+
+    private void createThreadBuilder() {
+        ThreadBuilder threadBuilder = null;
+        try {
+            Socket clientSocket = serverSocket.accept();
+            threadBuilder = new ThreadBuilder(clientSocket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.threadBuilder = threadBuilder;
+    }
+
+    public ThreadBuilder getThreadBuilder() {
+        return threadBuilder;
     }
 
 }

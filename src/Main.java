@@ -7,7 +7,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(4444);
-        ServerBuilder serverBuilder = new ServerBuilder(serverSocket);
+        ServerBuilder serverBuilder = new ServerBuilder(serverSocket, 100);
         serverBuilder.begin();
     }
 

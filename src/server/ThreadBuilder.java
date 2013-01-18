@@ -1,7 +1,5 @@
 package server;
 
-import server.requests.RequestParser;
-import server.requests.RequestReader;
 import server.responses.ResponseObject;
 
 import java.io.*;
@@ -11,6 +9,7 @@ import java.util.List;
 
 public class ThreadBuilder implements Runnable {
     private final Socket clientSocket;
+    private ResponseObject responseObject;
 
     public ThreadBuilder(Socket clientSocket) throws IOException {
         this.clientSocket = clientSocket;
@@ -20,20 +19,30 @@ public class ThreadBuilder implements Runnable {
     public void run() {
         try {
             InputStream inputStream = clientSocket.getInputStream();
-            List<String> requestContent = new RequestReader(inputStream).getRequestContent();
-            RequestParser requestParser = new RequestParser(requestContent);
-
-            requestParser.parseContent();
-            HashMap<String, String> httpRequestContent = requestParser.storeParsedContent();
-
+            HashMap<String, String> httpRequestContent = processInputStream(inputStream);
             ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestContent);
             ResponseObject responseObject = responseBuilder.generateResponseObject();
-            responseBuilder.formResponse(responseObject);
-
+            setResponseObject(responseObject);
+            responseBuilder.sendResponse(responseObject);
             clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private HashMap<String, String> processInputStream(InputStream inputStream) throws IOException {
+        List<String> requestContent = new RequestReader(inputStream).getRequestContent();
+        RequestParser requestParser = new RequestParser(requestContent);
+        requestParser.parseContent();
+        return requestParser.storeParsedContent();
+    }
+
+    private void setResponseObject(ResponseObject responseObject) {
+        this.responseObject = responseObject;
+    }
+
+    public ResponseObject getResponseObject() {
+        return responseObject;
     }
 
 }
