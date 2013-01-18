@@ -23,14 +23,7 @@ public class MockSocket extends Socket {
 
     public InputStream getInputStream() {
         String headers = "GET /somefancyroute HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(headers.getBytes());
-        return testInputStream;
-//        return new InputStream() {
-//            @Override
-//            public int read() throws IOException {
-//                return 0;
-//            }
-//        };
+        return new ByteArrayInputStream(headers.getBytes());
     }
 
 }

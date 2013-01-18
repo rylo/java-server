@@ -24,8 +24,18 @@ public class ServerBuilderTest {
         MockServerSocket mockServerSocket = new MockServerSocket(5555);
         ServerBuilder serverBuilder = new ServerBuilder(mockServerSocket, 1);
         serverBuilder.begin();
-        Thread.sleep(1000);
+        Thread.sleep(800);
         assertNotNull(serverBuilder.getThreadBuilder().getResponseObject());
+        mockServerSocket.close();
+    }
+
+    @Test
+    public void countsThreadsStarted() throws IOException, InterruptedException {
+        MockServerSocket mockServerSocket = new MockServerSocket(5555);
+        int limit = 3;
+        ServerBuilder serverBuilder = new ServerBuilder(mockServerSocket, limit);
+        serverBuilder.begin();
+        assertEquals(3, serverBuilder.count);
         mockServerSocket.close();
     }
 
