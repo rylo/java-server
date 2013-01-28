@@ -12,7 +12,7 @@ public class TimeResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

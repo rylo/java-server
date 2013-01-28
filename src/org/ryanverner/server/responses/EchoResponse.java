@@ -1,11 +1,6 @@
 package server.responses;
 
 public class EchoResponse extends ResponseObject {
-    private final String parsedRoute;
-
-    public EchoResponse(String parsedRoute) {
-        this.parsedRoute = parsedRoute;
-    }
 
     @Override
     public String getHeaders() {
@@ -13,7 +8,7 @@ public class EchoResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         return "Query string parameters are: \n" + parsedRoute;
     }
 

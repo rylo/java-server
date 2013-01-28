@@ -20,7 +20,7 @@ public class FileResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         String response = "";
         if(extension.matches("^.*?(jpeg|jpg|png).*$")) {
             try {

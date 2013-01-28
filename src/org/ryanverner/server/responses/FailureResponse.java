@@ -8,7 +8,7 @@ public class FailureResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         return "<h1>404: File or Directory Not Found error</h1>";
     }
 

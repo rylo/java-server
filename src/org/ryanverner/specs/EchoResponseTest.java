@@ -26,8 +26,8 @@ public class EchoResponseTest {
         requestParser.parseContent();
         HashMap<String, String> httpRequestHeaders = requestParser.storeParsedContent();
 
-        EchoResponse echoResponse = new EchoResponse(httpRequestHeaders.get("parsedRoute"));
-        assertEquals(echoResponse.getBody(requestParser.getRoute()), "Query string parameters are: \nkey=value\nname=Tom\nsport=basketball\n");
+        EchoResponse echoResponse = new EchoResponse();
+        assertEquals(echoResponse.getBody(requestParser.getRoute(), requestParser.getParsedRoute()), "Query string parameters are: \nkey=value\nname=Tom\nsport=basketball\n");
     }
 
 }

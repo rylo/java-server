@@ -15,7 +15,7 @@ public class DirectoryResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         File[] listOfFiles = requestedDirectory.listFiles();
         return linkFiles(route, listOfFiles);
     }

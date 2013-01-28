@@ -13,20 +13,20 @@ public class FileResponseTest {
 
     @Test
     public void canReadFile() {
-        File requestedFile = new File("src/test_files/info.txt");
+        File requestedFile = new File("src/org/ryanverner/test_files/info.txt");
         String extension = "txt";
         String contentType = "text/plain";
         FileResponse fileResponse = new FileResponse(requestedFile, extension, contentType);
-        assertEquals(fileResponse.getBody("src/test_files/info.txt"), "Something here\n" + "to read\n");
+        assertEquals(fileResponse.getBody("src/org/ryanverner/test_files/info.txt", ""), "Something here\n" + "to read\n");
     }
 
     @Test
     public void canConvertAnImageFileToByteArrayToString() throws IOException {
-        File requestedFile = new File("src/test_files/micah.jpg");
+        File requestedFile = new File("src/org/ryanverner/test_files/micah.jpg");
         String extension = "jpg";
         String contentType = "image/jpg";
         FileResponse fileResponse = new FileResponse(requestedFile, extension, contentType);
-        assertEquals(fileResponse.getBody("src/test_files/micah.jpg"), Arrays.toString(fileResponse.getByteArray()));
+        assertEquals(fileResponse.getBody("src/org/ryanverner/test_files/micah.jpg", ""), Arrays.toString(fileResponse.getByteArray()));
     }
 
 }

@@ -5,6 +5,7 @@ import org.junit.Test;
 import server.ResponseBuilder;
 import server.RequestParser;
 import server.RequestReader;
+import server.ServerBuilder;
 import server.responses.*;
 
 import java.io.ByteArrayInputStream;
@@ -51,7 +52,9 @@ public class ResponseBuilderTest {
         testHttpRequestParameters.put("body", requestParser.getBody());
         ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
 
-        assertTrue(responseBuilder.generateResponseObject() instanceof EchoResponse);
+        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
+        routes.put("echo", new EchoResponse());
+        assertTrue(responseBuilder.generateResponseObject(routes) instanceof EchoResponse);
     }
 
     @Test
@@ -73,7 +76,10 @@ public class ResponseBuilderTest {
         testHttpRequestParameters.put("body", requestParser.getBody());
         ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
 
-        assertTrue(responseBuilder.generateResponseObject() instanceof TimeResponse);
+        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
+        routes.put("time", new TimeResponse());
+
+        assertTrue(responseBuilder.generateResponseObject(routes) instanceof TimeResponse);
     }
 
     @Test
@@ -95,7 +101,9 @@ public class ResponseBuilderTest {
         testHttpRequestParameters.put("body", requestParser.getBody());
         ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
 
-        assertTrue(responseBuilder.generateResponseObject() instanceof DirectoryResponse);
+        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
+
+        assertTrue(responseBuilder.generateResponseObject(routes) instanceof DirectoryResponse);
     }
 
     @Test
@@ -117,7 +125,10 @@ public class ResponseBuilderTest {
         testHttpRequestParameters.put("body", requestParser.getBody());
         ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
 
-        assertTrue(responseBuilder.generateResponseObject() instanceof GetEchoPostResponse);
+        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
+        routes.put("echopost", new GetEchoPostResponse());
+
+        assertTrue(responseBuilder.generateResponseObject(routes) instanceof GetEchoPostResponse);
     }
 
     @Test
@@ -139,28 +150,9 @@ public class ResponseBuilderTest {
         testHttpRequestParameters.put("body", requestParser.getBody());
         ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
 
-        assertTrue(responseBuilder.generateResponseObject() instanceof PostEchoPostResponse);
-    }
+        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
 
-    @Test
-    public void test() throws IOException {
-        String testHeaders = "POST /echopost HTTP/1.1\nHost: localhost:4444";
-        ByteArrayInputStream testInputStream = new ByteArrayInputStream(testHeaders.getBytes());
-
-        RequestReader requestReader = new RequestReader(testInputStream);
-        List<String> requestContent = requestReader.getRequestContent();
-
-        RequestParser requestParser = new RequestParser(requestContent);
-        requestParser.parseContent();
-        String route = requestParser.getRoute();
-
-        HashMap<String, String> testHttpRequestParameters = new HashMap<String, String>();
-        testHttpRequestParameters.put("route", route);
-        testHttpRequestParameters.put("method", requestParser.getMethod());
-        testHttpRequestParameters.put("parsedRoute", requestParser.getParsedRoute());
-        testHttpRequestParameters.put("body", requestParser.getBody());
-        ResponseBuilder responseBuilder = new ResponseBuilder(mockSocket, testHttpRequestParameters);
-        assertTrue(responseBuilder.getRoutesMap().get("time") instanceof TimeResponse);
+        assertTrue(responseBuilder.generateResponseObject(routes) instanceof PostEchoPostResponse);
     }
 
     //    @Test

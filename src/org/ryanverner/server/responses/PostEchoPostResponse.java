@@ -13,7 +13,7 @@ public class PostEchoPostResponse extends ResponseObject {
     }
 
     @Override
-    public String getBody(String route) {
+    public String getBody(String route, String parsedRoute) {
         return body;
     }
 
