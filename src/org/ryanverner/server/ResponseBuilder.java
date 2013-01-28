@@ -15,21 +15,11 @@ public class ResponseBuilder {
         this.httpRequestContent = httpRequestContent;
     }
 
-    public HashMap<String, ResponseObject> getRoutesMap() {
-        HashMap<String, ResponseObject> routes = new HashMap<String, ResponseObject>();
-        routes.put("time", new TimeResponse());
-        routes.put("echo", new EchoResponse(httpRequestContent.get("parsedRoute")));
-        if(httpRequestContent.get("method").equals("GET")) {
-            routes.put("echopost", new GetEchoPostResponse());
-        } else if(httpRequestContent.get("method").equals("POST")) {
+    public ResponseObject generateResponseObject(HashMap<String, ResponseObject> routes) {
+        String route = httpRequestContent.get("route");
+        if(httpRequestContent.get("method").equals("POST")) {
             routes.put("echopost", new PostEchoPostResponse(httpRequestContent.get("body")));
         }
-        return routes;
-    }
-
-    public ResponseObject generateResponseObject() {
-        String route = httpRequestContent.get("route");
-        HashMap<String, ResponseObject> routes = getRoutesMap();
         ResponseObject responseObject;
         if(routes.containsKey(route)) {
             responseObject = routes.get(route);
@@ -69,8 +59,9 @@ public class ResponseBuilder {
         try {
             OutputStream outputStream = clientSocket.getOutputStream();
             String route = httpRequestContent.get("route");
+            String parsedRoute = httpRequestContent.get("parsedRoute");
             String headers = responseObject.getHeaders();
-            String body = responseObject.getBody(route);
+            String body = responseObject.getBody(route, parsedRoute);
             if(headers.contains("image")) {
                 respondWithImage(headers, body, outputStream);
             } else {

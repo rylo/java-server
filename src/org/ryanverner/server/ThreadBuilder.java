@@ -9,10 +9,12 @@ import java.util.List;
 
 public class ThreadBuilder implements Runnable {
     private final Socket clientSocket;
+    private final HashMap<String, ResponseObject> routes;
     private ResponseObject responseObject;
 
-    public ThreadBuilder(Socket clientSocket) throws IOException {
+    public ThreadBuilder(Socket clientSocket, HashMap<String, ResponseObject> routes) throws IOException {
         this.clientSocket = clientSocket;
+        this.routes = routes;
     }
 
     @Override
@@ -21,7 +23,7 @@ public class ThreadBuilder implements Runnable {
             InputStream inputStream = clientSocket.getInputStream();
             HashMap<String, String> httpRequestContent = processInputStream(inputStream);
             ResponseBuilder responseBuilder = new ResponseBuilder(clientSocket, httpRequestContent);
-            ResponseObject responseObject = responseBuilder.generateResponseObject();
+            ResponseObject responseObject = responseBuilder.generateResponseObject(routes);
             setResponseObject(responseObject);
             responseBuilder.sendResponse(responseObject);
             clientSocket.close();
