@@ -1,5 +1,7 @@
 package server;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class RequestParser {
         this.requestContent = requestContent;
     }
 
-    public void parseContent() {
+    public void parseContent() throws UnsupportedEncodingException {
         String requestContentLines[];
         try {
             requestContentLines = splitRequestContent();
@@ -43,13 +45,13 @@ public class RequestParser {
         return httpRequestContent;
     }
 
-    public String splitRouteAtQuestionMark(String route) {
+    public String splitRouteAtQuestionMark(String route) throws UnsupportedEncodingException {
         String splitRoutes[] =  route.split("\\?");
         int length = splitRoutes.length;
         if(length == 1) {
-            return splitRouteAtAmpersand(splitRoutes[0], length);
+            return URLDecoder.decode(splitRouteAtAmpersand(splitRoutes[0], length), "UTF-8");
         } else {
-            return splitRouteAtAmpersand(splitRoutes[1], length);
+            return URLDecoder.decode(splitRouteAtAmpersand(splitRoutes[1], length), "UTF-8");
         }
     }
 
@@ -63,7 +65,7 @@ public class RequestParser {
                 splitRoutes += "\n";
             }
         }
-        return splitRoutes;
+        return splitRoutes.replace("=", " = ");
     }
 
     private void setMethod(String method) {
@@ -79,7 +81,7 @@ public class RequestParser {
         this.protocol = protocol;
     }
 
-    private void setParsedRoute(String route) {
+    private void setParsedRoute(String route) throws UnsupportedEncodingException {
         this.parsedRoute = splitRouteAtQuestionMark(route);
     }
 

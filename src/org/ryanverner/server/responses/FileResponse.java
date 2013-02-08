@@ -22,7 +22,7 @@ public class FileResponse extends ResponseObject {
     @Override
     public String getBody(String route, String parsedRoute) {
         String response = "";
-        if(extension.matches("^.*?(jpeg|jpg|png).*$")) {
+        if(extension.matches("^.*?(jpeg|jpg|png|gif).*$")) {
             try {
                 response = readImage();
             } catch (IOException e) {

@@ -3,6 +3,7 @@ package server;
 import server.responses.ResponseObject;
 
 import java.io.IOException;
+import java.lang.String;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -19,8 +20,8 @@ public class ServerBuilder {
     }
 
     public void begin() throws IOException {
-        if(getServerSocket() == null) {
-            this.serverSocket = new ServerSocket(4444);
+        if(socketNotSet()) {
+            setToDefaultSocket();
         }
         int count = 0;
         while(count < limit) {
@@ -42,7 +43,7 @@ public class ServerBuilder {
         this.threadBuilder = threadBuilder;
     }
 
-    public void createRoutes(HashMap<String, ResponseObject> routes) {
+    public void setRoutes(HashMap<String, ResponseObject> routes) {
           this.routes = routes;
     }
 
@@ -50,12 +51,16 @@ public class ServerBuilder {
         this.serverSocket = serverSocket;
     }
 
-    public ThreadBuilder getThreadBuilder() {
-        return threadBuilder;
+    private void setToDefaultSocket() throws IOException {
+        this.serverSocket = new ServerSocket(4444);
     }
 
-    public ServerSocket getServerSocket() {
-        return serverSocket;
+    private boolean socketNotSet() {
+        return serverSocket == null;
+    }
+
+    public ThreadBuilder getThreadBuilder() {
+        return threadBuilder;
     }
 
 }

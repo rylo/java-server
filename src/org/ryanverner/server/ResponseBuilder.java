@@ -19,6 +19,7 @@ public class ResponseBuilder {
         String route = httpRequestContent.get("route");
         if(httpRequestContent.get("method").equals("POST")) {
             routes.put("echopost", new PostEchoPostResponse(httpRequestContent.get("body")));
+            routes.put("form", new PostEchoPostResponse(httpRequestContent.get("body")));
         }
         ResponseObject responseObject;
         if(routes.containsKey(route)) {
@@ -43,16 +44,31 @@ public class ResponseBuilder {
     }
 
     private ResponseObject getFileResponse(File path) {
-        String extension = String.valueOf(path).split("\\.")[1];
+        String extension = getExtension(path);
+        String contentType = getContentType(extension);
+        return new FileResponse(path, extension, contentType);
+    }
+
+    private String getExtension(File path) {
+        String fileName    = path.toString();
+        int extensionIndex = fileName.lastIndexOf(".");
+        String extension   = "";
+        if(extensionIndex > 0) {
+            extension = fileName.substring(extensionIndex).toLowerCase();
+        }
+        return extension;
+    }
+
+    private String getContentType(String extension) {
         String contentType;
         if(fileIsImage(extension)) {
-            contentType = "image/" + extension;
+            contentType = "image/" + extension.replace(".", "");
         } else if(fileIsPDF(extension)) {
             contentType = "application/pdf";
         } else {
             contentType = "text/plain";
         }
-        return new FileResponse(path, extension, contentType);
+        return contentType;
     }
 
     public void sendResponse(ResponseObject responseObject) throws IOException {
@@ -101,7 +117,7 @@ public class ResponseBuilder {
     }
 
     private boolean fileIsImage(String extension) {
-        return extension.matches("^.*?(jpeg|jpg|png).*$");
+        return extension.matches("^.*?(jpeg|jpg|png|gif).*$");
     }
 
     private boolean fileIsPDF(String extension) {
@@ -109,7 +125,8 @@ public class ResponseBuilder {
     }
 
     public File getRequestedPath(String route) {
-        String requestedPath = System.getProperty("user.dir") + "/" + route;
+        //String requestedPath = System.getProperty("user.dir") + "/" + route;
+        String requestedPath = "/Users/ryanzverner/Documents/Coding/8thLight/java-server-two/cob_spec/public" + "/" + route;
         return new File(requestedPath);
     }
 

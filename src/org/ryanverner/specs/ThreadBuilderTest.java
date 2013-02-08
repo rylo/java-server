@@ -17,12 +17,13 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 
 public class ThreadBuilderTest {
-    private HashMap<String, ResponseObject> mockRoutes;
+    private HashMap<String, ResponseObject> mockRoutes = new HashMap<String, ResponseObject>();
 
     @Test
     public void createsNewThreadAndGeneratesResponseObject() throws IOException, InterruptedException {
         MockServerSocket mockServerSocket = new MockServerSocket(5555);
         Socket clientSocket = mockServerSocket.accept();
+        mockRoutes.put("blob", new FailureResponse());
         ThreadBuilder threadBuilder = new ThreadBuilder(clientSocket, mockRoutes);
         new Thread(threadBuilder).start();
         Thread.sleep(1000);
@@ -32,7 +33,7 @@ public class ThreadBuilderTest {
 
     @Test
     public void canProcessAnInputStream() throws IOException {
-        MockServerSocket mockServerSocket = new MockServerSocket(5555);
+        MockServerSocket mockServerSocket = new MockServerSocket(6666);
         Socket clientSocket = mockServerSocket.accept();
         ThreadBuilder threadBuilder = new ThreadBuilder(clientSocket, mockRoutes);
         String testHeaders = "GET /time HTTP/1.1\nHost: localhost:5555";

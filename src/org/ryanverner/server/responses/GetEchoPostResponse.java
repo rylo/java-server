@@ -9,7 +9,8 @@ public class GetEchoPostResponse extends ResponseObject {
 
     @Override
     public String getBody(String route, String parsedRoute) {
-        return "<form method=\"post\">\n" +
+        return parsedRoute + "\n" +
+               "<form method=\"post\">\n" +
                "A: <input type=\"text\" name=\"A\"><br>\n" +
                "B: <input type=\"text\" name=\"B\"><br>\n" +
                "C: <input type=\"text\" name=\"C\"><br>\n" +
